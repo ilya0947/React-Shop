@@ -33,15 +33,16 @@ export default function Shop() {
            t = 300;
         thisCard.appendChild(copyItem);
         let cart = document.querySelector('.cart').getBoundingClientRect(),
-            x = cart.x - thisCard.getBoundingClientRect().x - 100,
-            y = document.documentElement.clientHeight - thisCard.getBoundingClientRect().bottom + cart.top + 50;
+            x = cart.left - thisCard.getBoundingClientRect().left - 100,
+            y = cart.bottom - thisCard.getBoundingClientRect().bottom + 650;
+
         copyItem.style.cssText = `
             position: absolute;
             transition: ${t}ms all ease;
             z-index: 10;
         `;
 
-        copyItem.style.transform = `translate(${x}px, ${y}px) scale(.01)`;
+        copyItem.style.transform = `translate(${x}px, ${y}px) scale(.1)`;
             setTimeout(() => {
                 copyItem.remove();
             }, t);
