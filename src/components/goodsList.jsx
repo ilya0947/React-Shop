@@ -1,6 +1,11 @@
 import GoodsItem from "./goodsItem";
+import React from "react";
+import { ShopContext } from "../context";
 
-export default function GoodsList({goods = [], cb = Function.prototype}) {
+export default function GoodsList({cb = Function.prototype}) {
+
+    const {goods = []} = React.useContext(ShopContext);
+
     if (!goods.length) {
         return <h3>Не получилось загрузить карточки товаров</h3>
     }

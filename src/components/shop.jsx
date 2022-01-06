@@ -4,14 +4,11 @@ import BasketList from "./basketList";
 import Cart from "./cart";
 import GoodsList from "./goodsList";
 import Preloader from "./preloader";
+import { ShopContext } from "../context";
 
 export default function Shop() {
 
-    const [goods, setGoods] = React.useState([]);
-    const [loading, setLoading] = React.useState(true);
-    const [order, setOrder] = React.useState([]);
-    const [isBasketShow, setIsBasketShow] = React.useState(false);
-    const [addMess, setAddMess] = React.useState({active: false, name: ''});
+    const {setGoods, loading, setLoading, order, setOrder, isBasketShow, setAddMess} = React.useContext(ShopContext);
 
     React.useEffect(function getGoods() {
         fetch(API_URL, {
@@ -24,10 +21,11 @@ export default function Shop() {
             res.featured && setGoods(res.featured);
         })
         .catch(() => alert("error"))
-        .finally(() => setLoading(false));
+        .finally(() => setLoading());
+    //eslint-disable-next-line
     }, []);
 
-    const cardToBasket = (e) => {
+    const flyToBasket = (e) => {
         const thisCard = e.target.parentNode.parentNode,
            copyItem = thisCard.cloneNode(true),
            t = 300;
@@ -43,16 +41,16 @@ export default function Shop() {
         `;
 
         copyItem.style.transform = `translate(${x}px, ${y}px) scale(.1)`;
-            setTimeout(() => {
-                copyItem.remove();
-            }, t);
+        setTimeout(() => {
+            copyItem.remove();
+        }, t);
     };
 
     const addToBasket = (e, item) => {
 
-        cardToBasket(e);
+        flyToBasket(e);
 
-        setAddMess({active: true, name: item.name});
+        setAddMess(item.name);
 
         const index = order.findIndex(orderItem => orderItem.id === item.id);
         
@@ -61,50 +59,26 @@ export default function Shop() {
                 ...item,
                 count: 1
             };
-            setOrder([...order, newItem]);
+            setOrder(newItem);
         } else {
             order.forEach(elem => {
                 if (elem.id === item.id) {
                     elem.count = elem.count + 1;
-                    setOrder([...order]);
+                    setOrder();
                 }
             });
         }
-    };
-
-    const delBasket = (itemId) => {
-        setOrder(order.filter(el => el.id !== itemId));
-    };
-
-    const handleBasketShow = () => {
-        setIsBasketShow(!isBasketShow);
     };
 
     const checkout = (obj) => {
         console.log(obj);
     };
 
-    const increment = (item) => {
-        item.count = item.count + 1;
-        setOrder([...order]);
-    };
-
-    const decrement = (item) => {
-        if (item.count > 1) {
-            item.count = item.count - 1;
-            setOrder([...order]);
-        }
-    };
-
-    const handleActive = () => {
-        setAddMess({active: false, name: ''});
-    };
-
     return (
         <main className="container content">
-            <Cart quantity={order.length} mess={addMess} handleActive={handleActive} cb={handleBasketShow}/>
-            {loading ? <Preloader/> : <GoodsList cb={addToBasket} goods={goods}/>}
-            {isBasketShow && <BasketList order={order} cbOrder={checkout} cb={handleBasketShow} deccb={decrement} inccb={increment} delcb={delBasket}/>}
+            <Cart/>
+            {loading ? <Preloader/> : <GoodsList cb={addToBasket}/>}
+            {isBasketShow && <BasketList cbOrder={checkout}/>}
         </main>
     )
 }

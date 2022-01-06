@@ -1,25 +1,30 @@
 import BasketMessage from "./messToBasket";
 import React from "react";
+import { ShopContext } from "../context";
 
-export default function Cart({quantity = 0, cb = Function.prototype, mess, handleActive}) {
+export default function Cart() {
 
- React.useEffect(() => {
-    const id = setTimeout(handleActive, 3000);
-    return () => {
-        clearTimeout(id);
-    };
-//eslint-disable-next-line
-}, [mess.active]);
+    const {setIsBasketShow, setAddActive, order, addMess} = React.useContext(ShopContext);
+
+    const time = 3000;
+
+    React.useEffect(() => {
+        const id = setTimeout(setAddActive, time);
+        return () => {
+            clearTimeout(id);
+        };
+    //eslint-disable-next-line
+    }, [addMess.active]);
 
 
 
     return (
         <>
-            <div onClick={cb} className="cart lime accent-2">
+            <div onClick={setIsBasketShow} className="cart lime accent-2">
                 <i className="material-icons">shopping_cart</i>
-                {quantity ? <span className="cart-quantity">{quantity}</span> : null}
+                {order.length ? <span className="cart-quantity">{order.length}</span> : null}
             </div>
-            {mess.active && <BasketMessage name={mess.name}/>}
+            {addMess.active && <BasketMessage t={time} name={addMess.name}/>}
         </>              
     )
 }

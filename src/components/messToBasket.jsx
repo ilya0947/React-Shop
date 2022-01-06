@@ -1,10 +1,10 @@
-export default function BasketMessage({name = ''}) {
+export default function BasketMessage({t, name = ''}) {
     const animation = (e) => {
         const tar = e.target;
         setTimeout(() => {
             tar.classList.remove('mess');
             tar.classList.add('messEnd');
-        }, 2400);
+        }, t - 550);
     };
 
     return (
