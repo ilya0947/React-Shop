@@ -1,17 +1,18 @@
 import React from "react";
-// import { ShopContext } from "../context";
-
 
 export default function GoodsItem({id, name, description, price, full_background, icon, cb}) {
 
-    // const {example} = React.useContext(ShopContext);
+    let img;
+    
+    let image = document.createElement('img');
+    image.src = full_background;
 
+    !image.width ? img = <img src={icon} alt={name}/> : img = <img src={full_background} alt={name}/>;
 
     return (
         <div className="card">
             <div className="card-image">
-                <img src={full_background === "https://media.fortniteapi.io/images/5a2ae270a641158746592cd5bdf27287/background_full.ru.png" ? icon : full_background} alt={name}/>
-                
+                {img}
             </div>
             <div className="card-content">
                 <span className="card-title">{name}</span>

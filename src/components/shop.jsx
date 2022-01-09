@@ -8,7 +8,7 @@ import { ShopContext } from "../context";
 
 export default function Shop() {
 
-    const {setGoods, loading, setLoading, order, setOrder, isBasketShow, setAddMess} = React.useContext(ShopContext);
+    const {setGoods, loading, setLoading, order, setOrder, /* flyToBasket, */ isBasketShow, setAddMess} = React.useContext(ShopContext);
 
     React.useEffect(function getGoods() {
         fetch(API_URL, {
@@ -28,19 +28,20 @@ export default function Shop() {
     const flyToBasket = (e) => {
         const thisCard = e.target.parentNode.parentNode,
            copyItem = thisCard.cloneNode(true),
-           t = 300;
-        thisCard.appendChild(copyItem);
-        let cart = document.querySelector('.cart').getBoundingClientRect(),
-            x = cart.left - thisCard.getBoundingClientRect().left - 100,
-            y = cart.bottom - thisCard.getBoundingClientRect().bottom + 650;
-
+           t = 300,
+           bott = thisCard.getBoundingClientRect().bottom;
+           thisCard.appendChild(copyItem);
+           let cart = document.querySelector('.cart').getBoundingClientRect(),
+           x = cart.left - thisCard.getBoundingClientRect().left - 100,
+           y = cart.bottom - bott + 220;
+           
         copyItem.style.cssText = `
             position: absolute;
             transition: ${t}ms all ease;
             z-index: 10;
         `;
 
-        copyItem.style.transform = `translate(${x}px, ${y}px) scale(.1)`;
+        copyItem.style.transform = `translate(${x}px, ${y}px) scale(.05)`;
         setTimeout(() => {
             copyItem.remove();
         }, t);
